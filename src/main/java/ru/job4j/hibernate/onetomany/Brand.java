@@ -1,6 +1,4 @@
-package ru.job4j.hibernate.models;
-
-import org.hibernate.annotations.Cascade;
+package ru.job4j.hibernate.onetomany;
 
 import javax.persistence.*;
 import java.util.ArrayList;

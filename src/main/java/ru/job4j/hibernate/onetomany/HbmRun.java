@@ -1,20 +1,28 @@
-package ru.job4j.hibernate.run;
+package ru.job4j.hibernate.onetomany;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import ru.job4j.hibernate.models.Brand;
-import ru.job4j.hibernate.models.Model;
+import org.hibernate.cfg.Configuration;
 
 public class HbmRun {
     public static void main(String[] args) {
+        Configuration cfg = new Configuration();
+        cfg.setProperty("hibernate.connection.url", "jdbc:postgresql://127.0.0.1:5432/autos");
         StandardServiceRegistry registry =
-                new StandardServiceRegistryBuilder().configure().build();
+                new StandardServiceRegistryBuilder()
+                        .configure()
+                        .applySettings(cfg.getProperties())
+                        .build();
         try {
             SessionFactory sf =
-                    new MetadataSources(registry).buildMetadata().buildSessionFactory();
+                    new MetadataSources(registry)
+                            .addAnnotatedClass(Brand.class)
+                            .addAnnotatedClass(Model.class)
+                            .buildMetadata()
+                            .buildSessionFactory();
             Session session = sf.openSession();
             session.beginTransaction();
             Model model1 = Model.of("Vesta");

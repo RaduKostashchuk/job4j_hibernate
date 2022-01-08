@@ -1,4 +1,4 @@
-package ru.job4j.hibernate.models;
+package ru.job4j.hibernate.onetomany;
 
 import javax.persistence.*;
 import java.util.Objects;
