@@ -1,8 +1,6 @@
 package ru.job4j.hibernate.hql;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
@@ -16,6 +14,9 @@ public class Candidate {
     private int experience;
 
     private int salary;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    Base base;
 
     public static Candidate of(String name, int experience, int salary) {
         Candidate candidate = new Candidate();
@@ -57,6 +58,14 @@ public class Candidate {
         this.salary = salary;
     }
 
+    public Base getBase() {
+        return base;
+    }
+
+    public void setBase(Base base) {
+        this.base = base;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -81,6 +90,7 @@ public class Candidate {
                 + ", name='" + name + '\''
                 + ", experience=" + experience
                 + ", salary=" + salary
+                + ", base=" + base
                 + '}';
     }
 }
