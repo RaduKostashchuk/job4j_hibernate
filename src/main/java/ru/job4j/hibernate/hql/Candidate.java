@@ -16,7 +16,7 @@ public class Candidate {
     private int salary;
 
     @OneToOne(fetch = FetchType.LAZY)
-    Base base;
+    private Base base;
 
     public static Candidate of(String name, int experience, int salary) {
         Candidate candidate = new Candidate();
