@@ -21,6 +21,8 @@ public class HbmRun {
         try {
             SessionFactory sf = new MetadataSources(registry)
                     .addAnnotatedClass(Candidate.class)
+                    .addAnnotatedClass(Base.class)
+                    .addAnnotatedClass(Vacancy.class)
                     .buildMetadata()
                     .buildSessionFactory();
             create(sf);
@@ -28,7 +30,9 @@ public class HbmRun {
                 System.out.println(candidate);
             }
             System.out.println(getCandidateById(sf, 3));
-            System.out.println(getCandidateByName(sf, "Egor"));
+            for (Candidate candidate : getCandidateByName(sf, "Egor")) {
+                System.out.println(candidate);
+            }
             updateCandidateById(sf, 2);
             deleteCandidateById(sf, 1);
         } catch (Exception e) {
@@ -54,7 +58,7 @@ public class HbmRun {
     private static List<Candidate> getAllCandidates(SessionFactory sf) {
         Session session = sf.openSession();
         session.beginTransaction();
-        List candidates = session.createQuery("from Candidate").list();
+        List<Candidate> candidates = session.createQuery("from Candidate", Candidate.class).list();
         session.getTransaction().commit();
         session.close();
         return candidates;
@@ -63,7 +67,7 @@ public class HbmRun {
     private static Candidate getCandidateById(SessionFactory sf, int id) {
         Session session = sf.openSession();
         session.beginTransaction();
-        Candidate candidate = (Candidate) session.createQuery("from Candidate where id = :id")
+        Candidate candidate = session.createQuery("from Candidate where id = :id", Candidate.class)
                 .setParameter("id", id)
                 .uniqueResult();
         session.getTransaction().commit();
@@ -71,15 +75,15 @@ public class HbmRun {
         return candidate;
     }
 
-    private static Candidate getCandidateByName(SessionFactory sf, String name) {
+    private static List<Candidate> getCandidateByName(SessionFactory sf, String name) {
         Session session = sf.openSession();
         session.beginTransaction();
-        Candidate candidate = (Candidate) session.createQuery("from Candidate where name = :name")
+        List<Candidate> candidates = session.createQuery("from Candidate where name = :name", Candidate.class)
                 .setParameter("name", name)
-                .uniqueResult();
+                .getResultList();
         session.getTransaction().commit();
         session.close();
-        return candidate;
+        return candidates;
     }
 
     private static void updateCandidateById(SessionFactory sf, int id) {
